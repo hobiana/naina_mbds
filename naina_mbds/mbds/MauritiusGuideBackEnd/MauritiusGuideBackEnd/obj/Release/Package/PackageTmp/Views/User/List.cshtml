@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>Users</h2>
+
+@Html.ActionLink("Create a new user", "New")
+<table id="users" class="table table-bordered table-hover dataTable no-footer">
+    <thead>
+        <tr>
+            <th>Phone Number</th>
+            <th>Name</th>
+            <th>Language</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Create Date</th>
+            <th>Active</th>
+            <th></th>
+            <th></th>
+            <th></th>
+           
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#users").DataTable({
+                ajax: {
+                    url: "@System.Configuration.ConfigurationManager.AppSettings["HOST_API"]User/GetUsers",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "PhoneNumber"
+                    },
+                    {
+                        data: "Name"
+                    },
+                    {
+                        data: "Languages.Nom"
+                    },
+                    {
+                        data: "Role.RoleName"
+                    },
+                    {
+                        data: "Email"
+                    },
+                    {
+                        data: "CreateDate"
+                    },
+                    {
+                        data: "Active"
+                    },
+                    {
+                        data: "ID",
+                        render: function (data) {
+                            return "<a href='@System.Configuration.ConfigurationManager.AppSettings["HOST_BackEnd"]User/Places/" + data + "'>Places</a>";
+                        }
+                    },
+                    {
+                        data: "ID",
+                        render: function (data) {
+                            return "<a href='@System.Configuration.ConfigurationManager.AppSettings["HOST_BackEnd"]User/Edit/" + data + "'>Update</a>";
+                        }
+                    },
+                    {
+                        data: "ID",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-customer-id=" + data + ">delete</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            $("#users").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to delete this User", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "@System.Configuration.ConfigurationManager.AppSettings["HOST_API"]User/DeleteUsers/" + button.attr("data-customer-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

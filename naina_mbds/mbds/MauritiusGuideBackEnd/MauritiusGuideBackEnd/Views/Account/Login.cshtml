@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+@{
+    Layout = "";
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @model MauritiusGuideBackEnd.ViewModel.AccountViewModel
+</head>
+<body>
+    <div class="container body-content">
+
+        <div class="row">
+            <div class="col-md-8">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                     {
+                        @Html.AntiForgeryToken()
+                        <h4>Use a local account to log in.</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Account.Email, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Account.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Account.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Account.Password, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.Account.Password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Account.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Log in" class="btn btn-default" />
+                            </div>
+                        </div>
+                    }
+                </section>
+            </div>
+        </div>
+
+
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/lib")
+    @Scripts.Render("~/bundles/bootstrap")
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#place').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+}
+
+</body>
+</html>

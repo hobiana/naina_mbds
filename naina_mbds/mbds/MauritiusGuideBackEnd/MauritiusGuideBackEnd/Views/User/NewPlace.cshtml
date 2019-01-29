@@ -1,0 +1,77 @@
+﻿
+@model MauritiusGuideBackEnd.ViewModel.UserViewModel
+
+@using (Html.BeginForm("AddPlaces", "User", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("userId",Model.User.ID)
+
+    <div class="form-horizontal">
+        <h4>User_Place</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.User.Name, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("User", Model.User.Name, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-bordered table-hover dataTable no-footer" id="datatable">
+                <thead>
+                <th>Select</th>
+                <th>Place Name</th>
+                <th>Lat</th>
+                <th>Lon</th>
+                <th>in door</th>
+                <th>out door</th>
+                </thead>
+                <tbody>
+                    @foreach (var place in Model.Places)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="placeIdsToAdd" value="@place.ID" />
+                            </td>
+                            <td>
+                                @place.PlaceName
+                            </td>
+                            <td>
+                                @place.Latitude
+                            </td>
+                            <td>
+                                @place.Longitude
+                            </td>
+                            <td>
+                                @place.IsIndoor
+                            </td>
+                            <td>
+                                @place.IsOutdoor
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+}

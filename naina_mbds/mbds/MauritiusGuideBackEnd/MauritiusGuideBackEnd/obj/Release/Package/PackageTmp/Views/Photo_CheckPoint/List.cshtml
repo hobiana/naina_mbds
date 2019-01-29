@@ -1,0 +1,88 @@
+﻿
+@model MauritiusGuideBackEnd.ViewModel.PhotoCheckPointViewModel
+@{
+    ViewBag.Title = "CheckPoints Photos";
+}
+<h2>@Model.CheckPoint.BeaconName Photos</h2>
+@Html.ActionLink("New PhotoCheckPoint", "New", "Photo_CheckPoint", new { checkpointId = Model.CheckPoint.ID }, null)
+<table id="checkpoints" class="table table-bordered table-hover dataTable no-footer">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Extension</th>
+            <th>Description</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@Html.ActionLink("Back", "List", "Checkpoint", new { placeId = Model.CheckPoint.PlaceId }, null)
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#checkpoints").DataTable({
+                ajax: {
+                    url: "@System.Configuration.ConfigurationManager.AppSettings["HOST_API"]Photo_CheckPoint/GetPhotoByCheckPoint/@Model.CheckPoint.ID",
+                        dataSrc: ""
+        },
+            columns: [
+                {
+                    data: "Photo_Code",
+                    render: function (data) {
+                        return "<img src='data:image / png; base64,"+data+"' />";
+                    }
+
+                },
+                {
+                    data: "Photo_Path"
+                },
+                {
+                    data: "Photo_Extension"
+                },
+                {
+                    data: "Description"
+                },
+                {
+                    data: "ID",
+                    render: function (data) {
+                        return "<a href='@System.Configuration.ConfigurationManager.AppSettings["HOST_BackEnd"]Photo_CheckPoint/Edit/" + data + "'>Update</a>";
+                    }
+                },
+                {
+                    data: "ID",
+                    render: function (data) {
+                        return "<button class='btn-link js-delete' data-customer-id=" + data + ">delete</button>";
+                    }
+                }
+            ]
+            });
+
+
+        $("#checkpoints").on("click", ".js-delete", function () {
+            var button = $(this);
+
+            bootbox.confirm("Are you sure you want to delete this Image?", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: "@System.Configuration.ConfigurationManager.AppSettings["HOST_API"]Photo_CheckPoint/DeletePhoto_Place/" + button.attr("data-customer-id"),
+                        method: "DELETE",
+                        success: function () {
+                            table.row(button.parents("tr")).remove().draw();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
+            });
+        });
+        });
+    </script>
+}
+
+

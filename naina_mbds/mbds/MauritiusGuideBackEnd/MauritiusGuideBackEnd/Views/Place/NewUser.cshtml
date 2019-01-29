@@ -1,0 +1,77 @@
+﻿
+@model MauritiusGuideBackEnd.ViewModel.PlaceViewModel
+
+@using (Html.BeginForm("AddUsers", "Place", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("PlaceId", Model.Place.ID)
+
+    <div class="form-horizontal">
+        <h4>User_Place</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Place.PlaceName, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("User", Model.Place.PlaceName, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-bordered table-hover dataTable no-footer" id="datatable">
+                <thead>
+                <th>Select</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Language</th>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="UserIdsToAdd" value="@user.ID" />
+                            </td>
+                            <td>
+                                @user.Name
+                            </td>
+                            <td>
+                                @user.PhoneNumber
+                            </td>
+                            <td>
+                                @user.Email
+                            </td>
+                            <td>
+                                @user.Role.RoleName
+                            </td>
+                            <td>
+                                @user.Languages.Nom
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+}

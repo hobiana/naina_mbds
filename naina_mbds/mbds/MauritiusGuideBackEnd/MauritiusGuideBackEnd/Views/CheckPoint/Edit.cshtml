@@ -1,0 +1,180 @@
+﻿@model MauritiusGuideBackEnd.ViewModel.CheckPointViewModel
+@{
+    ViewBag.Title = "Update";
+}
+<style>
+    #map {
+        height: 300px;
+        width: 100%;
+    }
+</style>
+
+<h2>Update</h2>
+
+@using (Html.BeginForm("Update","CheckPoint"))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="row">
+        <div class="form-horizontal col-md-6">
+            <h4>CheckPoint</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.CheckPoint.ID)
+            @Html.HiddenFor(model => model.CheckPoint.Active)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.BeaconUuid, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.BeaconUuid, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.BeaconUuid, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.BeaconOrder, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.BeaconOrder, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.BeaconOrder, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.MajorId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.MajorId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.MajorId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.MinorId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.MinorId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.MinorId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.BeaconName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.BeaconName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.BeaconName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.Latitude, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckPoint.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.Longitude, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckPoint.PlaceId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.CheckPoint.PlaceId, new SelectList(Model.Places, "ID", "PlaceName", Model.CheckPoint.ID), "Select places", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CheckPoint.PlaceId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Update" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="height:300px;background-color:black">
+            <div id="map"></div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "List", "Checkpoint", new { placeId = Model.CheckPoint.PlaceId }, null)
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    var map;
+    var marker;
+    function initMap() {
+        var center = { lat: @Model.CheckPoint.Latitude, lng: @Model.CheckPoint.Longitude };
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: center
+        });
+
+        var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+        marker = new google.maps.Marker({
+            map: map,
+            icon: image,
+            title : '@Model.CheckPoint.BeaconName',
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            position: center
+        });
+
+        map.addListener('rightclick', function (event) {
+            marker.setPosition(event.latLng);
+            changeMarkerPositionInFieldInput(marker.getPosition());
+            window.setTimeout(function () {
+                map.panTo(marker.getPosition());
+            }, 1000);
+
+        });
+
+
+        marker.addListener('mouseup', function () {
+            var position = this.getPosition();
+            changeMarkerPositionInFieldInput(position);
+
+        });
+
+    }
+
+    function changeMarkerPositionInFieldInput(location) {
+        document.getElementById("CheckPoint_Latitude").value = location.lat();
+        document.getElementById("CheckPoint_Longitude").value = location.lng();
+    }
+
+    document.getElementById("CheckPoint_Latitude").addEventListener('change', function () {
+
+
+        var position = {
+            lat: Number(this.value),
+            lng: Number(document.getElementById("CheckPoint_Longitude").value)
+        };
+        marker.setPosition(position);
+        window.setTimeout(function () {
+            map.panTo(marker.getPosition());
+        }, 1000);
+    });
+
+    document.getElementById("CheckPoint_Longitude").addEventListener('change', function () {
+        var position = {
+            lat: Number(document.getElementById("CheckPoint_Latitude").value),
+            lng: Number(this.value)
+        };
+        marker.setPosition(position);
+        window.setTimeout(function () {
+            map.panTo(marker.getPosition());
+        }, 1000);
+    });
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqXYZ7262ZADoRhqLGrjnsx6QbfQqQsng&callback=initMap">
+</script>

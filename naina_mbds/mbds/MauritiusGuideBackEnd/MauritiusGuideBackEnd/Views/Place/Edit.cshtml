@@ -1,0 +1,158 @@
+﻿@model MauritiusGuideWS.Models.Place
+
+@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    #map {
+        height: 300px;
+        width: 100%;
+    }
+</style>
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm("Update","Place"))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="form-horizontal col-md-6">
+            <h4>Place</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PlaceName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PlaceName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PlaceName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsIndoor, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsIndoor)
+                        @Html.ValidationMessageFor(model => model.IsIndoor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsOutdoor, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsOutdoor)
+                        @Html.ValidationMessageFor(model => model.IsOutdoor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Update" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="height:300px;background-color:black">
+            <div id="map"></div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<script>
+    var marker;
+    var map;
+    function initMap() {
+        var maurice = { lat: -20.2580922, lng: 57.5919968 };
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: maurice
+        });
+        marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            title: '@Model.PlaceName',
+            animation: google.maps.Animation.DROP,
+            position: { lat: @Model.Latitude, lng: @Model.Longitude }
+        });
+        map.addListener('rightclick', function (event) {
+            //alert(event.latLng);
+            marker.setPosition(event.latLng);
+            changeMarkerPositionInFieldInput(marker.getPosition());
+            window.setTimeout(function () {
+                map.panTo(marker.getPosition());
+            }, 1000);
+
+        });
+        marker.addListener('mouseup', function () {
+            var position = this.getPosition();
+            changeMarkerPositionInFieldInput(position);
+
+        });
+
+    }
+
+    function changeMarkerPositionInFieldInput(location)
+    {
+        document.getElementById("Latitude").value = location.lat();
+        document.getElementById("Longitude").value = location.lng();
+    }
+
+    document.getElementById("Latitude").addEventListener('change', function () {
+
+
+        var position = {
+            lat: Number(this.value),
+            lng: Number(document.getElementById("Longitude").value)
+        };
+        marker.setPosition(position);
+        window.setTimeout(function () {
+            map.panTo(marker.getPosition());
+        }, 1000);
+    });
+
+    document.getElementById("Longitude").addEventListener('change', function () {
+        var position = {
+            lat: Number(document.getElementById("Latitude").value),
+            lng: Number(this.value)
+        };
+        marker.setPosition(position);
+        window.setTimeout(function () {
+            map.panTo(marker.getPosition());
+        }, 1000);
+    });
+
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqXYZ7262ZADoRhqLGrjnsx6QbfQqQsng&callback=initMap">
+</script>

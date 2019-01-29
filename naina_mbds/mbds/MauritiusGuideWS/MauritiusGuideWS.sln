@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauritiusGuideWS", "MauritiusGuideWS\MauritiusGuideWS.csproj", "{35289E73-C5D7-43C1-AE2D-92583CE10744}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauritiusGuideBackEnd", "..\MauritiusGuideBackEnd\MauritiusGuideBackEnd\MauritiusGuideBackEnd.csproj", "{7D17F7B1-38D3-4862-9A8C-3C78E32414CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35289E73-C5D7-43C1-AE2D-92583CE10744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35289E73-C5D7-43C1-AE2D-92583CE10744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35289E73-C5D7-43C1-AE2D-92583CE10744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35289E73-C5D7-43C1-AE2D-92583CE10744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D17F7B1-38D3-4862-9A8C-3C78E32414CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D17F7B1-38D3-4862-9A8C-3C78E32414CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D17F7B1-38D3-4862-9A8C-3C78E32414CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D17F7B1-38D3-4862-9A8C-3C78E32414CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF3EF3FF-BCA7-4D0D-B060-AC1D198D4B93}
+	EndGlobalSection
+EndGlobal

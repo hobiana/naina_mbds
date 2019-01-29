@@ -1,0 +1,49 @@
+﻿@model MauritiusGuideBackEnd.ViewModel.UserViewModel
+
+<h2>Places</h2>
+<p>
+    @Html.ActionLink("Add place", "NewPlace", "User", new { id = Model.User.ID }, null)
+</p>
+<table id="place" class="table table-bordered table-hover dataTable no-footer">
+    <thead>
+        <tr>
+            <th>Place name</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Is in door</th>
+            <th>Is out door</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PlaceModel)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.PlaceName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Latitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Longitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.IsIndoor)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.IsOutdoor)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#place').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+}

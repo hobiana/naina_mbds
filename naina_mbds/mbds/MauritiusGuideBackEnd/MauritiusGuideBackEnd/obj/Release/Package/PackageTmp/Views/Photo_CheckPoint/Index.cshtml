@@ -1,0 +1,13 @@
+﻿@model string
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<textarea>@Model</textarea>
+@if (ViewBag.Base64String != null)
+{
+    <hr />
+    <img alt="" src="@ViewBag.Base64String" style="" />
+}

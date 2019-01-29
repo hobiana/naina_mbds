@@ -1,0 +1,48 @@
+﻿@model IEnumerable<MauritiusGuideWS.Models.Role>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="role" class="table table-bordered table-hover dataTable no-footer" >
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoleName)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#role').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+}

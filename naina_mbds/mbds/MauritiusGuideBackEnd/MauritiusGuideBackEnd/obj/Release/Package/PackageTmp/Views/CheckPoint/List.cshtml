@@ -1,0 +1,86 @@
+﻿
+@model MauritiusGuideBackEnd.ViewModel.CheckPointViewModel
+@{
+    ViewBag.Title = "CheckPoints";
+}
+
+<h2>@Model.Place.PlaceName CheckPoints</h2>
+@Html.ActionLink("Create a new CheckPoint", "New", "Checkpoint",new { placeId = Model.Place.ID }, null)
+<table id="checkpoints" class="table table-bordered table-hover dataTable no-footer">
+    <thead>
+        <tr>
+            <th>Beacon name</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Photo checkPoint</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@Html.ActionLink("Back to List", "Index", "Place")
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#checkpoints").DataTable({
+                ajax: {
+                    url: "@System.Configuration.ConfigurationManager.AppSettings["HOST_API"]CheckPoint/GetCheckPointByPlace/@Model.Place.ID",
+                        dataSrc: ""
+        },
+            columns: [
+                {
+                    data: "BeaconName"
+                },
+                {
+                    data: "Latitude"
+                },
+                {
+                    data: "Longitude"
+                },
+                {
+                    data: "ID",
+                    render: function (data, type, checkpoint) {
+                        return "<a href='@System.Configuration.ConfigurationManager.AppSettings["HOST_BackEnd"]Photo_CheckPoint/List?checkPointId=" + checkpoint.ID + "'>ListPhoto</a>";
+                    }
+                },
+                {
+                    data: "ID",
+                    render: function (data, type, checkpoint) {
+                        return "<a href='@System.Configuration.ConfigurationManager.AppSettings["HOST_BackEnd"]CheckPoint/Edit/" + checkpoint.ID + "'>Update</a>";
+                    }
+                },
+                {
+                    data: "ID",
+                    render: function (data, type, checkpoint) {
+                        return "<button class='btn-link js-delete' data-customer-id=" + checkpoint.ID + ">delete</button>";
+                    }
+                }
+            ]
+            });
+
+
+        $("#checkpoints").on("click", ".js-delete", function () {
+            var button = $(this);
+
+            bootbox.confirm("Are you sure you want to delete this place?", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: "@System.Configuration.ConfigurationManager.AppSettings["HOST_API"]CheckPoint/DeleteCheckPoint/" + button.attr("data-customer-id"),
+                        method: "DELETE",
+                        success: function () {
+                            table.row(button.parents("tr")).remove().draw();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
+            });
+        });
+        });
+    </script>
+}
